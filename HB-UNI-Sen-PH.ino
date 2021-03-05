@@ -344,6 +344,11 @@ private:
       //1.) slope
       float slope = (7.0-4.0)/((((float)calib_neutralVoltage/10.0)-1500.0)/3.0 - (((float)calib_acidVoltage / 10.0)-1500.0)/3.0);
       DPRINT(F("         SLOPE    : "));DDECLN(slope);
+
+      //1a.) slope temperature compensation
+      float slope_corrected = slope * ( ( ((float)currentTemperature / 10.0) +273.15) / ( ((float)calib_Temperature / 10.0)  + 273.15) );
+      DPRINT(F("         SLOPECORR: "));DDECLN(slope_corrected);
+
       //2.) intercept
       float intercept =  7.0 - slope*(((float)calib_neutralVoltage/10.0)-1500.0)/3.0;
       DPRINT(F("         INTERCEPT: "));DDECLN(intercept);
