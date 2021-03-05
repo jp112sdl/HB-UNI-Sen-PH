@@ -15,7 +15,7 @@
 
 #include <Register.h>
 #include <MultiChannelDevice.h>
-#include <DallasTemperature.h>
+#include <sensors/Ds18b20.h>
 
 #include <LiquidCrystal_I2C.h>
 #define LCD_ADDRESS        0x27
@@ -209,7 +209,7 @@ private:
     MeasureEventMsg   msg;
     UserStorage       us;
     OneWire           dsWire;
-    DallasTemperature ds18b20;
+    Ds18b20           ds18b20[1];
     bool              calibrationMode;
     bool              first;
     int16_t           currentTemperature;
@@ -219,12 +219,12 @@ private:
     uint16_t          calib_neutralVoltage;
     uint16_t          calib_acidVoltage;
   public:
-    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), ds18b20(&dsWire), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0) {}
+    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0) {}
     virtual ~MeasureChannel () {}
 
     int16_t readTemperature() {
-      ds18b20.requestTemperatures();
-      return (10 * ds18b20.getTempCByIndex(0)) + (-35+5*this->getList1().TemperatureOffsetIndex());
+      Ds18b20::measure(ds18b20, 1);
+      return (ds18b20[0].temperature()) + (-35+5*this->getList1().TemperatureOffsetIndex());
     }
 
     uint32_t readVoltage() {
@@ -370,6 +370,7 @@ private:
     void setup(Device<Hal, UList0>* dev, uint8_t number, uint16_t addr) {
       Channel::setup(dev, number, addr);
       pinMode(PH_SIGNAL_PIN, INPUT);
+      Ds18b20::init(dsWire, ds18b20, 1);
       sysclock.add(*this);
     }
 
