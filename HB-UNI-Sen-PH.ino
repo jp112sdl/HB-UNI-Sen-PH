@@ -46,23 +46,31 @@ const struct DeviceInfo PROGMEM devinfo = {
 typedef AskSin<StatusLed<LED_PIN>, NoBattery, Radio<AvrSPI<10, 11, 12, 13>, 2>> Hal;
 Hal hal;
 
-DEFREGISTER(UReg0, MASTERID_REGS, 0x20, 0x21, DREG_BACKONTIME)
+DEFREGISTER(UReg0, MASTERID_REGS, 0x1f, 0x20, 0x21, DREG_BACKONTIME)
 class UList0 : public RegList0<UReg0> {
   public:
     UList0 (uint16_t addr) : RegList0<UReg0>(addr) {}
 
-    bool Sendeintervall (uint16_t value) const {
-      return this->writeRegister(0x20, (value >> 8) & 0xff) && this->writeRegister(0x21, value & 0xff);
+    bool Sendeintervall (uint8_t value) const {
+      return this->writeRegister(0x21, value & 0xff);
     }
-    uint16_t Sendeintervall () const {
-      return (this->readRegister(0x20, 0) << 8) + this->readRegister(0x21, 0);
+    uint8_t Sendeintervall () const {
+      return this->readRegister(0x21, 0);
+    }
+
+    bool Messintervall (uint16_t value) const {
+      return this->writeRegister(0x1f, (value >> 8) & 0xff) && this->writeRegister(0x20, value & 0xff);
+    }
+    uint16_t Messintervall () const {
+      return (this->readRegister(0x1f, 0) << 8) + this->readRegister(0x20, 0);
     }
 
     void defaults () {
       clear();
       lowBatLimit(22);
       backOnTime(60);
-      Sendeintervall(180);
+      Sendeintervall(18);
+      Messintervall(10);
     }
 };
 
@@ -219,8 +227,11 @@ private:
     uint16_t          ph;
     uint16_t          calib_neutralVoltage;
     uint16_t          calib_acidVoltage;
+    uint16_t          measureCount;
+    uint32_t          ph_cumulated;
+    uint32_t          temperature_cumulated;
   public:
-    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), ds18b20_present(false), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0) {}
+    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), ds18b20_present(false), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0), measureCount(0), ph_cumulated(0), temperature_cumulated(0) {}
     virtual ~MeasureChannel () {}
 
     int16_t readTemperature() {
@@ -317,6 +328,7 @@ private:
           break;
         case 2:
           voltage = readVoltage();
+          //voltage = 14900;
           if (voltage > 13220 && voltage < 16780) {
             calib_neutralVoltage = voltage;
           } else calibrationStep = 6;
@@ -325,6 +337,7 @@ private:
           break;
         case 4:
           voltage = readVoltage();
+          //voltage = 19900;
           if (voltage > 18540 && voltage < 22100) {
             calib_acidVoltage = voltage;
           } else calibrationStep = 6;
@@ -343,7 +356,11 @@ private:
     }
 
     void run() {
-      set(seconds2ticks(max(10,device().getList0().Sendeintervall())));
+      measureCount++;
+
+      DPRINT(F("Messung #"));DDECLN(measureCount);
+
+      set(seconds2ticks(max(5,device().getList0().Messintervall())));
 
       if (first) {
         restoreCalibrationValues();
@@ -374,8 +391,16 @@ private:
       //Anzeige der Daten auf dem LCD Display
       lcd.showMeasureValues(currentTemperature, ph);
 
-      msg.init(device().nextcount(), (ds18b20_present == true) ? currentTemperature : -400, ph);
-      device().broadcastEvent(msg);
+      ph_cumulated          += ph;
+      temperature_cumulated += currentTemperature;
+
+      if (measureCount >= device().getList0().Sendeintervall()) {
+        msg.init(device().nextcount(), (ds18b20_present == true) ? temperature_cumulated / measureCount  : -400, ph_cumulated / measureCount);
+        device().broadcastEvent(msg);
+        measureCount = 0;
+        ph_cumulated = 0;
+        temperature_cumulated = 0;
+      }
       sysclock.add(*this);
     }
 
@@ -408,7 +433,6 @@ private:
 };
 
 class UType : public MultiChannelDevice<Hal, MeasureChannel, 1, UList0> {
-private:
 
 public:
   typedef MultiChannelDevice<Hal, MeasureChannel, 1, UList0> TSDevice;
@@ -417,6 +441,7 @@ public:
 
   virtual void configChanged () {
     TSDevice::configChanged();
+    DPRINT(F("*Messintervall        : ")); DDECLN(this->getList0().Messintervall());
     DPRINT(F("*Sendeintervall       : ")); DDECLN(this->getList0().Sendeintervall());
 
     uint8_t bOn = this->getList0().backOnTime();
