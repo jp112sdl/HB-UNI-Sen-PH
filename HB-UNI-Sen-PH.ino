@@ -112,7 +112,6 @@ private:
   String phToStr(uint16_t p) {
     String s_ph = " --.-";
     s_ph = (String)((float)p / 100.0);
-    s_ph = s_ph.substring(0, s_ph.length() - 1);
     if (p < 1000) s_ph = " " + s_ph;
     return "PH : " + s_ph ;
   }
