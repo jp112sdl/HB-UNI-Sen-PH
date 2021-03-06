@@ -109,11 +109,11 @@ private:
     return "T  :" + s_temp + (char)223 + "C ";
   }
 
-  String phToStr(uint8_t p) {
+  String phToStr(uint16_t p) {
     String s_ph = " --.-";
-    s_ph = (String)((float)p / 10.0);
+    s_ph = (String)((float)p / 100.0);
     s_ph = s_ph.substring(0, s_ph.length() - 1);
-    if (p < 100) s_ph = " " + s_ph;
+    if (p < 1000) s_ph = " " + s_ph;
     return "PH : " + s_ph ;
   }
 
@@ -124,7 +124,7 @@ public:
 
 
 
-  void showMeasureValues(int16_t temperature, uint8_t ph) {
+  void showMeasureValues(int16_t temperature, uint16_t ph) {
     lcd.clear();
     lcd.setCursor(0,0); lcd.print(tempToStr(temperature));
     lcd.setCursor(0,1); lcd.print(phToStr(ph));
@@ -197,7 +197,7 @@ LcdType lcd;
 
 class MeasureEventMsg : public Message {
   public:
-    void init(uint8_t msgcnt, int16_t temp, uint8_t ph) {
+    void init(uint8_t msgcnt, int16_t temp, uint16_t ph) {
       Message::init(0x0d, msgcnt, 0x53, BIDI | WKMEUP, (temp >> 8) & 0x7f, temp & 0xff);
       pload[0] = (ph >> 8) & 0xff;
       pload[1] =  ph & 0xff;
@@ -216,7 +216,7 @@ private:
     int16_t           currentTemperature;
     int16_t           calib_Temperature;
     uint8_t           calibrationStep;
-    uint8_t           ph;
+    uint16_t          ph;
     uint16_t          calib_neutralVoltage;
     uint16_t          calib_acidVoltage;
   public:
@@ -368,7 +368,7 @@ private:
       float intercept =  7.0 - slope*(((float)calib_neutralVoltage/10.0)-1500.0)/3.0;
       DPRINT(F("         INTERCEPT: "));DDECLN(intercept);
       //3.) PH
-      ph = ( slope*( ((float)measuredVoltage/10.0) - 1500.0 ) / 3.0 + intercept ) * 10.0; //PH Wert muss mit 10 multipliziert werden, da nur "ganze Bytes" übertragen werden können (PH 7.2 ^= 72)
+      ph = ( slope*( ((float)measuredVoltage/10.0) - 1500.0 ) / 3.0 + intercept ) * 100.0; //PH Wert muss mit 100 multipliziert werden, da nur "ganze Bytes" übertragen werden können (PH 7.2 ^= 72)
       DPRINT(F("         PH       : "));DDECLN(ph);
 
       //Anzeige der Daten auf dem LCD Display
