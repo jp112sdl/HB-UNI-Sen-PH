@@ -100,13 +100,14 @@ public:
   }backlightalarm;
 private:
   uint8_t backlightOnTime;
+  const byte degree[8] = { 0b00111, 0b00101, 0b00111, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000 };
 
   String tempToStr(int16_t t) {
     String s_temp = " --.-";
     s_temp = (String)((float)t / 10.0);
     s_temp = s_temp.substring(0, s_temp.length() - 1);
     if (t < 1000 && t >= 0) s_temp = " " + s_temp;
-    return "T  :" + s_temp + (char)223 + "C ";
+    return "T  :" + s_temp + " C ";
   }
 
   String phToStr(uint16_t p) {
@@ -121,11 +122,10 @@ public:
   LcdType () :  backlightalarm(*this), backlightOnTime(10), lcd(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS){}
   virtual ~LcdType () {}
 
-
-
   void showMeasureValues(int16_t temperature, uint16_t ph) {
     lcd.clear();
-    lcd.setCursor(0,0); lcd.print(tempToStr(temperature));
+    lcd.write(byte(0));
+    lcd.setCursor(0,0); lcd.print(tempToStr(temperature));lcd.setCursor(9,0);lcd.write(byte(0));
     lcd.setCursor(0,1); lcd.print(phToStr(ph));
   }
 
@@ -153,7 +153,7 @@ public:
       lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 5:
-      lcd.setCursor(0,0);lcd.print(F("Saving."));lcd.print(tempToStr(t));
+      lcd.setCursor(0,0);lcd.print(F("Saving."));lcd.print(tempToStr(t));lcd.setCursor(11,0);lcd.write(byte(0));
       lcd.setCursor(0,1);lcd.print("7:");lcd.print(n);lcd.print(" 4:");lcd.print(a);
       _delay_ms(2000);
       break;
@@ -170,6 +170,7 @@ public:
     Wire.beginTransmission(LCD_ADDRESS);
     if (Wire.endTransmission() == 0) {
       lcd.init();
+      lcd.createChar(0, degree);
       lcd.backlight();
       lcd.setCursor(0, 0);
       lcd.print(ASKSIN_PLUS_PLUS_IDENTIFIER);
