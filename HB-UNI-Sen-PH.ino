@@ -135,23 +135,23 @@ public:
     switch (step) {
     case 0:
       lcd.setCursor(0,0);lcd.print(F("CALIBRATION MODE"));
-      lcd.setCursor(0,1);lcd.print(F("  Press button"));
+      lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 1:
       lcd.setCursor(0,0);lcd.print(F("Put in 7.0 sol."));
-      lcd.setCursor(0,1);lcd.print(F("  Press button"));
+      lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 2:
       lcd.setCursor(0,0);lcd.print(F("Reading 7.0 DONE"));
-      lcd.setCursor(0,1);lcd.print(F("  Press button"));
+      lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 3:
       lcd.setCursor(0,0);lcd.print(F("Put in 4.0 sol."));
-      lcd.setCursor(0,1);lcd.print(F("  Press button"));
+      lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 4:
       lcd.setCursor(0,0);lcd.print(F("Reading 4.0 DONE"));
-      lcd.setCursor(0,1);lcd.print(F("  Press button"));
+      lcd.setCursor(2,1);lcd.print(F("Press button"));
       break;
     case 5:
       lcd.setCursor(0,0);lcd.print(F("Saving."));lcd.print(tempToStr(t));
@@ -159,8 +159,8 @@ public:
       _delay_ms(2000);
       break;
     case 6:
-      lcd.setCursor(0,0);lcd.print(F("   CAL FAILED"));
-      lcd.setCursor(0,1);lcd.print(F(" STARTING AGAIN"));
+      lcd.setCursor(3,0);lcd.print(F("CAL FAILED"));
+      lcd.setCursor(1,1);lcd.print(F("STARTING AGAIN"));
       _delay_ms(2000);
       break;
     }
@@ -210,6 +210,7 @@ private:
     UserStorage       us;
     OneWire           dsWire;
     Ds18b20           ds18b20[1];
+    bool              ds18b20_present;
     bool              calibrationMode;
     bool              first;
     int16_t           currentTemperature;
@@ -219,19 +220,33 @@ private:
     uint16_t          calib_neutralVoltage;
     uint16_t          calib_acidVoltage;
   public:
-    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0) {}
+    MeasureChannel () : Channel(), Alarm(seconds2ticks(3)), us(0), dsWire(DS18B20_PIN), ds18b20_present(false), calibrationMode(false), first(true), currentTemperature(0), calib_Temperature(0), calibrationStep(0), ph(0), calib_neutralVoltage(0), calib_acidVoltage(0) {}
     virtual ~MeasureChannel () {}
 
     int16_t readTemperature() {
+      if (ds18b20_present == false) return 250;
+
       Ds18b20::measure(ds18b20, 1);
+      DPRINT(F("Temperature       : "));DDECLN(ds18b20[0].temperature());
       return (ds18b20[0].temperature()) + (-35+5*this->getList1().TemperatureOffsetIndex());
     }
 
     uint32_t readVoltage() {
-      uint16_t analogValue = analogRead(PH_SIGNAL_PIN);
+      analogRead(PH_SIGNAL_PIN);
+
+      //Mittelwert über 5 Messungen
+      uint32_t analogValue = 0;
+      for (uint8_t i=0; i <5; i++) {
+        _delay_ms(5);
+        analogValue += analogRead(PH_SIGNAL_PIN);
+      }
+      analogValue = analogValue / 5;
       DPRINT(F("analogValue       : "));DDECLN(analogValue);
+      //
+
       uint32_t voltage = ((uint32_t)analogValue * REF_VOLTAGE * 10UL) / 1024;
       DPRINT(F("measured Voltage  : "));DDECLN(voltage);
+
       return voltage;
     }
 
@@ -240,10 +255,10 @@ private:
       calib_acidVoltage    = ((uint16_t)(us.getByte(3)) << 8) + ((uint16_t)(us.getByte(4)));
       calib_Temperature    = ((uint16_t)(us.getByte(5)) << 8) + ((uint16_t)(us.getByte(6)));
 
-      DPRINTLN(F("Restored Calibration Values"));
-      DPRINT(F("CAL neutralVoltage: "));DDECLN(calib_neutralVoltage);
-      DPRINT(F("CAL acidVoltage   : "));DDECLN(calib_acidVoltage);
-      DPRINT(F("CAL temperature   : "));DDECLN(calib_Temperature);
+      DPRINTLN(F("Restored Calibration Values:"));
+      DPRINT(F("-CAL neutralVoltage: "));DDECLN(calib_neutralVoltage);
+      DPRINT(F("-CAL acidVoltage   : "));DDECLN(calib_acidVoltage);
+      DPRINT(F("-CAL temperature   : "));DDECLN(calib_Temperature);
     }
 
     void disableCalibrationMode() {
@@ -267,10 +282,10 @@ private:
     }
 
     void saveCalibrationValues() {
-      DPRINTLN(F("Saving Calibration Values"));
-      DPRINT(F("CAL neutralVoltage: "));DDECLN(calib_neutralVoltage);
-      DPRINT(F("CAL acidVoltage   : "));DDECLN(calib_acidVoltage);
-      DPRINT(F("CAL temperature   : "));DDECLN(calib_Temperature);
+      DPRINTLN(F("Saving Calibration Values:"));
+      DPRINT(F("-CAL neutralVoltage: "));DDECLN(calib_neutralVoltage);
+      DPRINT(F("-CAL acidVoltage   : "));DDECLN(calib_acidVoltage);
+      DPRINT(F("-CAL temperature   : "));DDECLN(calib_Temperature);
 
       us.setByte(1, (calib_neutralVoltage >> 8) & 0xff);
       us.setByte(2, (calib_neutralVoltage)      & 0xff);
@@ -359,7 +374,7 @@ private:
       //Anzeige der Daten auf dem LCD Display
       lcd.showMeasureValues(currentTemperature, ph);
 
-      msg.init(device().nextcount(), currentTemperature, ph);
+      msg.init(device().nextcount(), (ds18b20_present == true) ? currentTemperature : -400, ph);
       device().broadcastEvent(msg);
       sysclock.add(*this);
     }
@@ -375,7 +390,8 @@ private:
     void setup(Device<Hal, UList0>* dev, uint8_t number, uint16_t addr) {
       Channel::setup(dev, number, addr);
       pinMode(PH_SIGNAL_PIN, INPUT);
-      Ds18b20::init(dsWire, ds18b20, 1);
+      ds18b20_present = (Ds18b20::init(dsWire, ds18b20, 1) == 1);
+      DPRINT(F("DS18B20: "));DPRINTLN( ds18b20_present == true ? "OK":"FAIL");
       sysclock.add(*this);
     }
 
@@ -384,7 +400,7 @@ private:
     }
 
     void configChanged() {
-      DPRINT(F("*Temperature Offset     :"));DDECLN(this->getList1().TemperatureOffsetIndex());
+      DPRINT(F("*Temperature Offset   : "));DDECLN(this->getList1().TemperatureOffsetIndex());
     }
 
     uint8_t status () const { return 0; }
@@ -401,7 +417,7 @@ public:
 
   virtual void configChanged () {
     TSDevice::configChanged();
-    DPRINT(F("*Sendeintervall: ")); DDECLN(this->getList0().Sendeintervall());
+    DPRINT(F("*Sendeintervall       : ")); DDECLN(this->getList0().Sendeintervall());
 
     uint8_t bOn = this->getList0().backOnTime();
     DPRINT(F("*LCD Backlight Ontime : ")); DDECLN(bOn);
