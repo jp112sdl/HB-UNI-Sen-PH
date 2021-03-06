@@ -1,0 +1,390 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Arduino_Pro_Mini:Arduino_Pro_Mini X1
+U 1 1 60429A94
+P 5590 3780
+F 0 "X1" H 5590 2533 60  0000 C CNN
+F 1 "Arduino_Pro_Mini" H 5590 2427 60  0001 C CNN
+F 2 "" V 5240 3680 60  0000 C CNN
+F 3 "https://www.arduino.cc/en/Main/ArduinoBoardProMini" H 5590 2321 60  0001 C CNN
+	1    5590 3780
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW1
+U 1 1 6042B2B3
+P 4840 4230
+F 0 "SW1" H 4840 4510 50  0000 C CNN
+F 1 "Config" H 4840 4410 50  0000 C CNN
+F 2 "" H 4840 4430 50  0001 C CNN
+F 3 "~" H 4840 4430 50  0001 C CNN
+	1    4840 4230
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 6042B795
+P 4140 2620
+F 0 "R1" H 4070 2574 50  0000 R CNN
+F 1 "4k7" V 4130 2690 50  0000 R CNN
+F 2 "" V 4070 2620 50  0001 C CNN
+F 3 "~" H 4140 2620 50  0001 C CNN
+	1    4140 2620
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 6042BCB9
+P 4210 3830
+F 0 "R2" V 4130 3830 50  0000 C CNN
+F 1 "240" V 4210 3830 50  0000 C CNN
+F 2 "" V 4140 3830 50  0001 C CNN
+F 3 "~" H 4210 3830 50  0001 C CNN
+	1    4210 3830
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 6042C10A
+P 4060 3980
+F 0 "D1" V 4090 4150 50  0000 R CNN
+F 1 "LED" V 3970 4170 50  0000 R CNN
+F 2 "" H 4060 3980 50  0001 C CNN
+F 3 "~" H 4060 3980 50  0001 C CNN
+	1    4060 3980
+	0    -1   -1   0   
+$EndComp
+$Comp
+L cc1101:CC1101 U2
+U 1 1 6042D5C9
+P 7590 3210
+F 0 "U2" H 7840 4047 60  0000 C CNN
+F 1 "CC1101" H 7840 3941 60  0000 C CNN
+F 2 "" H 7590 3210 60  0001 C CNN
+F 3 "" H 7590 3210 60  0001 C CNN
+	1    7590 3210
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x04 J1
+U 1 1 6042F1F8
+P 8820 4000
+F 0 "J1" H 8770 4210 50  0000 L CNN
+F 1 "LCD 16x2" H 8630 3660 50  0000 L CNN
+F 2 "" H 8820 4000 50  0001 C CNN
+F 3 "~" H 8820 4000 50  0001 C CNN
+	1    8820 4000
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5040 3730
+NoConn ~ 6140 3630
+NoConn ~ 6140 3830
+NoConn ~ 6140 3930
+NoConn ~ 5040 4030
+NoConn ~ 5040 4130
+NoConn ~ 5040 4330
+NoConn ~ 5040 3230
+NoConn ~ 5040 3330
+NoConn ~ 5040 3430
+NoConn ~ 5040 3530
+NoConn ~ 6140 3330
+$Comp
+L power:GND #PWR03
+U 1 1 604312C5
+P 4060 4490
+F 0 "#PWR03" H 4060 4240 50  0001 C CNN
+F 1 "GND" H 4065 4317 50  0000 C CNN
+F 2 "" H 4060 4490 50  0001 C CNN
+F 3 "" H 4060 4490 50  0001 C CNN
+	1    4060 4490
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4360 3830 5040 3830
+Wire Wire Line
+	4060 4130 4060 4490
+Wire Wire Line
+	4640 4230 4530 4230
+Wire Wire Line
+	4530 4230 4530 4490
+$Comp
+L power:GND #PWR04
+U 1 1 60439D67
+P 4530 4490
+F 0 "#PWR04" H 4530 4240 50  0001 C CNN
+F 1 "GND" H 4535 4317 50  0000 C CNN
+F 2 "" H 4530 4490 50  0001 C CNN
+F 3 "" H 4530 4490 50  0001 C CNN
+	1    4530 4490
+	1    0    0    -1  
+$EndComp
+$Comp
+L Sensor_Temperature:DS18B20 U1
+U 1 1 6043C89C
+P 3700 2830
+F 0 "U1" H 3470 2876 50  0000 R CNN
+F 1 "DS18B20" H 3470 2785 50  0000 R CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 2700 2580 50  0001 C CNN
+F 3 "http://datasheets.maximintegrated.com/en/ds/DS18B20.pdf" H 3550 3080 50  0001 C CNN
+	1    3700 2830
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 60440B78
+P 3700 3270
+F 0 "#PWR02" H 3700 3020 50  0001 C CNN
+F 1 "GND" H 3705 3097 50  0000 C CNN
+F 2 "" H 3700 3270 50  0001 C CNN
+F 3 "" H 3700 3270 50  0001 C CNN
+	1    3700 3270
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 3130 3700 3270
+Wire Wire Line
+	4000 2830 4140 2830
+Wire Wire Line
+	4140 2830 4140 2770
+Wire Wire Line
+	3700 2530 3700 2410
+Wire Wire Line
+	3700 2410 4140 2410
+Wire Wire Line
+	4140 2410 4140 2470
+Wire Wire Line
+	3700 2410 3700 2180
+Connection ~ 3700 2410
+$Comp
+L power:+3.3V #PWR01
+U 1 1 604432AF
+P 3700 2180
+F 0 "#PWR01" H 3700 2030 50  0001 C CNN
+F 1 "+3.3V" H 3715 2353 50  0000 C CNN
+F 2 "" H 3700 2180 50  0001 C CNN
+F 3 "" H 3700 2180 50  0001 C CNN
+	1    3700 2180
+	1    0    0    -1  
+$EndComp
+Text GLabel 4230 2830 2    50   Output ~ 0
+DS18B20_WIRE
+Wire Wire Line
+	4140 2830 4230 2830
+Connection ~ 4140 2830
+Text GLabel 5040 3930 0    50   Input ~ 0
+DS18B20_WIRE
+NoConn ~ 5390 4930
+NoConn ~ 5490 4930
+NoConn ~ 5590 4930
+Text GLabel 5040 3630 0    50   Input ~ 0
+CC1101_GDO0
+Text GLabel 8390 3060 2    50   Output ~ 0
+CC1101_GDO0
+$Comp
+L power:+3.3V #PWR012
+U 1 1 60451EC1
+P 7250 2640
+F 0 "#PWR012" H 7250 2490 50  0001 C CNN
+F 1 "+3.3V" H 7265 2813 50  0000 C CNN
+F 2 "" H 7250 2640 50  0001 C CNN
+F 3 "" H 7250 2640 50  0001 C CNN
+	1    7250 2640
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR013
+U 1 1 604522A4
+P 7250 3240
+F 0 "#PWR013" H 7250 2990 50  0001 C CNN
+F 1 "GND" H 7255 3067 50  0000 C CNN
+F 2 "" H 7250 3240 50  0001 C CNN
+F 3 "" H 7250 3240 50  0001 C CNN
+	1    7250 3240
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7250 2640 7250 2660
+Wire Wire Line
+	7250 2660 7290 2660
+Wire Wire Line
+	7250 3240 7250 3210
+Wire Wire Line
+	7250 3210 7290 3210
+NoConn ~ 8390 2960
+Text GLabel 8390 3160 2    50   Input ~ 0
+CC1101_CS
+Text GLabel 6140 4430 2    50   Output ~ 0
+CC1101_CS
+Text GLabel 6140 4130 2    50   Output ~ 0
+CC1101_SCK
+Text GLabel 8390 2760 2    50   Input ~ 0
+CC1101_SCK
+Text GLabel 8390 2660 2    50   Input ~ 0
+CC1101_MOSI
+Text GLabel 8390 2860 2    50   Output ~ 0
+CC1101_MISO
+Text GLabel 6140 4230 2    50   Input ~ 0
+CC1101_MISO
+Text GLabel 6140 4330 2    50   Output ~ 0
+CC1101_MOSI
+Text GLabel 6140 3730 2    50   BiDi ~ 0
+SDA
+Text GLabel 6140 3530 2    50   Output ~ 0
+SCL
+$Comp
+L power:GND #PWR08
+U 1 1 60455562
+P 8340 4270
+F 0 "#PWR08" H 8340 4020 50  0001 C CNN
+F 1 "GND" H 8345 4097 50  0000 C CNN
+F 2 "" H 8340 4270 50  0001 C CNN
+F 3 "" H 8340 4270 50  0001 C CNN
+	1    8340 4270
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR07
+U 1 1 6045641A
+P 8340 3830
+F 0 "#PWR07" H 8340 3680 50  0001 C CNN
+F 1 "+5V" H 8355 4003 50  0000 C CNN
+F 2 "" H 8340 3830 50  0001 C CNN
+F 3 "" H 8340 3830 50  0001 C CNN
+	1    8340 3830
+	1    0    0    -1  
+$EndComp
+Text GLabel 8620 3900 0    50   Input ~ 0
+SCL
+Text GLabel 8620 4000 0    50   BiDi ~ 0
+SDA
+Wire Wire Line
+	8340 3830 8340 4100
+Wire Wire Line
+	8340 4100 8620 4100
+Wire Wire Line
+	8620 4200 8340 4200
+Wire Wire Line
+	8340 4200 8340 4270
+$Comp
+L power:+5V #PWR05
+U 1 1 604588E2
+P 6640 3130
+F 0 "#PWR05" H 6640 2980 50  0001 C CNN
+F 1 "+5V" H 6655 3303 50  0000 C CNN
+F 2 "" H 6640 3130 50  0001 C CNN
+F 3 "" H 6640 3130 50  0001 C CNN
+	1    6640 3130
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6640 3130 6140 3130
+$Comp
+L power:GND #PWR09
+U 1 1 6045C516
+P 6640 3330
+F 0 "#PWR09" H 6640 3080 50  0001 C CNN
+F 1 "GND" H 6645 3157 50  0000 C CNN
+F 2 "" H 6640 3330 50  0001 C CNN
+F 3 "" H 6640 3330 50  0001 C CNN
+	1    6640 3330
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6140 3230 6640 3230
+Wire Wire Line
+	6640 3230 6640 3330
+$Comp
+L power:+3.3V #PWR06
+U 1 1 6045D923
+P 6310 3350
+F 0 "#PWR06" H 6310 3200 50  0001 C CNN
+F 1 "+3.3V" H 6325 3523 50  0000 C CNN
+F 2 "" H 6310 3350 50  0001 C CNN
+F 3 "" H 6310 3350 50  0001 C CNN
+	1    6310 3350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6140 3430 6310 3430
+Wire Wire Line
+	6310 3430 6310 3350
+NoConn ~ 5340 2630
+NoConn ~ 5440 2630
+NoConn ~ 5540 2630
+NoConn ~ 5640 2630
+NoConn ~ 5740 2630
+NoConn ~ 5840 2630
+$Comp
+L Connector_Generic:Conn_01x03 J2
+U 1 1 6042DF7D
+P 7690 4100
+F 0 "J2" H 7650 4310 50  0000 L CNN
+F 1 "PH_Sensor" H 7490 3850 50  0000 L CNN
+F 2 "" H 7690 4100 50  0001 C CNN
+F 3 "~" H 7690 4100 50  0001 C CNN
+	1    7690 4100
+	1    0    0    -1  
+$EndComp
+Text GLabel 6140 4030 2    50   Input ~ 0
+A0
+Text GLabel 7490 4000 0    50   Output ~ 0
+A0
+$Comp
+L power:GND #PWR011
+U 1 1 6046C34B
+P 7250 4250
+F 0 "#PWR011" H 7250 4000 50  0001 C CNN
+F 1 "GND" H 7255 4077 50  0000 C CNN
+F 2 "" H 7250 4250 50  0001 C CNN
+F 3 "" H 7250 4250 50  0001 C CNN
+	1    7250 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR010
+U 1 1 6046C7A2
+P 7250 3880
+F 0 "#PWR010" H 7250 3730 50  0001 C CNN
+F 1 "+3.3V" H 7265 4053 50  0000 C CNN
+F 2 "" H 7250 3880 50  0001 C CNN
+F 3 "" H 7250 3880 50  0001 C CNN
+	1    7250 3880
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7250 3880 7250 4100
+Wire Wire Line
+	7250 4100 7490 4100
+Wire Wire Line
+	7490 4200 7250 4200
+Wire Wire Line
+	7250 4200 7250 4250
+Text Notes 7770 4030 0    50   ~ 0
+A
+Text Notes 7760 4130 0    50   ~ 0
++
+Text Notes 7760 4230 0    50   ~ 0
+-
+Text Notes 8890 3930 0    50   ~ 0
+SCL
+Text Notes 8890 4030 0    50   ~ 0
+SDA
+Text Notes 8890 4130 0    50   ~ 0
+VCC
+Text Notes 8890 4230 0    50   ~ 0
+GND
+$EndSCHEMATC
