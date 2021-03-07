@@ -108,7 +108,7 @@ public:
   }backlightalarm;
 private:
   uint8_t backlightOnTime;
-  const byte degree[8] = { 0b00111, 0b00101, 0b00111, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000 };
+  byte degree[8] = { 0b00111, 0b00101, 0b00111, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000 };
 
   String tempToStr(int16_t t) {
     String s_temp = " --.-";
