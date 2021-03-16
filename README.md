@@ -14,3 +14,8 @@ universeller HomeMatic PH-Sensor
 #### Schaltungsübersicht
 
 ![schematics](Images/schematics.png)
+
+
+#### CCU Einstellungen
+
+![einstellungen](Images/ccu_einstellungen.png)
