@@ -2,6 +2,8 @@
 
 universeller HomeMatic PH-Sensor
 
+Bei Fragen und Diskussionen zum Projekt: https://homematic-forum.de/forum/viewtopic.php?f=76&t=66356
+
 #### Bauteile:
 
 - Arduino Pro Mini (3.3V / 8MHz)
