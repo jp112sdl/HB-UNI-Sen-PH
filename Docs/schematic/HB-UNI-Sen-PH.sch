@@ -38,13 +38,13 @@ $EndComp
 $Comp
 L Device:R R1
 U 1 1 6042B795
-P 4140 2620
-F 0 "R1" H 4070 2574 50  0000 R CNN
-F 1 "4k7" V 4130 2690 50  0000 R CNN
-F 2 "" V 4070 2620 50  0001 C CNN
-F 3 "~" H 4140 2620 50  0001 C CNN
-	1    4140 2620
-	-1   0    0    1   
+P 3950 2450
+F 0 "R1" V 4020 2510 50  0000 R CNN
+F 1 "4k7" V 3940 2520 50  0000 R CNN
+F 2 "" V 3880 2450 50  0001 C CNN
+F 3 "~" H 3950 2450 50  0001 C CNN
+	1    3950 2450
+	0    -1   -1   0   
 $EndComp
 $Comp
 L Device:R R2
@@ -158,17 +158,6 @@ Wire Wire Line
 	3700 3130 3700 3270
 Wire Wire Line
 	4000 2830 4140 2830
-Wire Wire Line
-	4140 2830 4140 2770
-Wire Wire Line
-	3700 2530 3700 2410
-Wire Wire Line
-	3700 2410 4140 2410
-Wire Wire Line
-	4140 2410 4140 2470
-Wire Wire Line
-	3700 2410 3700 2180
-Connection ~ 3700 2410
 $Comp
 L power:+3.3V #PWR01
 U 1 1 604432AF
@@ -387,4 +376,15 @@ Text Notes 8890 4130 0    50   ~ 0
 VCC
 Text Notes 8890 4230 0    50   ~ 0
 GND
+Wire Wire Line
+	3700 2180 3700 2450
+Wire Wire Line
+	3800 2450 3700 2450
+Connection ~ 3700 2450
+Wire Wire Line
+	3700 2450 3700 2530
+Wire Wire Line
+	4140 2450 4100 2450
+Wire Wire Line
+	4140 2450 4140 2830
 $EndSCHEMATC
