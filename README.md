@@ -26,3 +26,8 @@ Bei Fragen und Diskussionen zum Projekt: https://homematic-forum.de/forum/viewto
 #### CCU Einstellungen
 
 ![einstellungen](Images/ccu_einstellungen.png)
+
+#### LCD Display
+![1](Images/IMG_2142.jpeg)
+![2](Images/IMG_2143.jpeg)
+![3](Images/IMG_2144.jpeg)
