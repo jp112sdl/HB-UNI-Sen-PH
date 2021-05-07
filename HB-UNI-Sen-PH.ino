@@ -382,10 +382,10 @@ private:
       DPRINT(F("         SLOPECORR: "));DDECLN(slope_corrected);
 
       //2.) intercept
-      float intercept =  7.0 - slope*(((float)calib_neutralVoltage/10.0)-1500.0)/3.0;
+      float intercept =  7.0 - slope_corrected*(((float)calib_neutralVoltage/10.0)-1500.0)/3.0;
       DPRINT(F("         INTERCEPT: "));DDECLN(intercept);
       //3.) PH
-      ph = ( slope*( ((float)measuredVoltage/10.0) - 1500.0 ) / 3.0 + intercept ) * 100.0; //PH Wert muss mit 100 multipliziert werden, da nur "ganze Bytes" übertragen werden können (PH 7.2 ^= 72)
+      ph = ( slope_corrected*( ((float)measuredVoltage/10.0) - 1500.0 ) / 3.0 + intercept ) * 100.0; //PH Wert muss mit 100 multipliziert werden, da nur "ganze Bytes" übertragen werden können (PH 7.2 ^= 72)
       DPRINT(F("         PH       : "));DDECLN(ph);
 
       //Anzeige der Daten auf dem LCD Display
